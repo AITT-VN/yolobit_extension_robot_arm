@@ -1,0 +1,14 @@
+{
+    "name": "Robot Arm",
+    "description": "Mục mở rộng điều khiển cánh tay robot cho robot Rover",
+    "libs": [
+        "arm.py"
+    ],
+    "blocks": [
+        "definition.js"
+    ],
+    "toolbox": "toolbox.xml",
+    "languages": {
+    },
+    "poster": "poster.png"
+}
