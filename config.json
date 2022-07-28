@@ -1,8 +1,8 @@
 {
     "name": "Robot Arm",
-    "description": "Mục mở rộng điều khiển cánh tay robot cho robot Rover",
+    "description": "Mục mở rộng điều khiển cánh tay robot cho Yolo:Bit",
     "libs": [
-        "arm.py"
+        "yolobit_arm.py", "main.py"
     ],
     "blocks": [
         "definition.js"
