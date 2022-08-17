@@ -120,6 +120,8 @@ try:
             if ble_connected:
                 while True:
                     arm.moveKinematic(theta, radius, height, speed)
+                    print('theta: ', theta, ', radius: ',
+                          radius, ' , height: ', height)
                     time.sleep_ms(50)
                     if not ble_connected:
                         break
