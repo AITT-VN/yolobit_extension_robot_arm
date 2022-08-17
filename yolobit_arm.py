@@ -10,8 +10,7 @@ from utility import *
 
 class Arm():
 
-    def __init__(self, base=pin0, right=pin1, left=pin2, gripper=pin3):
-        #self.servo = Servo()
+    def __init__(self, base=pin8, right=pin9, left=pin10, gripper=pin11):
         self.base = base
         self.right = right
         self.left = left
@@ -38,6 +37,7 @@ class Arm():
         say('Arm released')
 
     # Servo Base (Theta)
+
     def moveBase(self, moveToBase, speed=100):
 
         # speed of movement
@@ -62,6 +62,23 @@ class Arm():
                 self.base.servo_write(i)
                 self.defaultBase = moveToBase
                 time.sleep_ms(int(sleep))
+
+    def rotateBase(self, change=2, sleep=10, limit=None, max_degree=180, min_degree=0):
+
+        while True:
+            new_pos = self.defaultBase + change
+
+            if limit == None:
+                if change <= 0:
+                    limit = min_degree
+                else:
+                    limit = max_degree
+
+            if (change <= 0 and new_pos < limit) or (change > 0 and new_pos > limit):
+                return
+
+            self.moveBase(new_pos)
+            time.sleep_ms(sleep)
 
     # Servo Gripper
     def moveGripper(self, moveToGripper, speed=100):
@@ -118,6 +135,23 @@ class Arm():
                 self.defaultRight = moveToRight
                 time.sleep_ms(int(sleep))
 
+    def rotateRight(self, change=2, sleep=10, step=None, limit=None, max_degree=179, min_degree=50):
+
+        while True:
+            new_pos = self.defaultRight + change
+
+            if limit == None:
+                if change <= 0:
+                    limit = min_degree
+                else:
+                    limit = max_degree
+
+            if (change <= 0 and new_pos < limit) or (change > 0 and new_pos > limit):
+                return
+
+            self.moveRight(new_pos)
+            time.sleep_ms(sleep)
+
     # Servo Left
     def moveLeft(self, moveToLeft, speed=100, kine=False):
 
@@ -147,7 +181,25 @@ class Arm():
                 self.defaultLeft = moveToLeft
                 time.sleep_ms(int(sleep))
 
+    def rotateLeft(self, change=2, sleep=10, step=None, limit=None, max_degree=140, min_degree=5):
+
+        while True:
+            new_pos = self.defaultLeft + change
+
+            if limit == None:
+                if change <= 0:
+                    limit = min_degree
+                else:
+                    limit = max_degree
+
+            if (change <= 0 and new_pos < limit) or (change > 0 and new_pos > limit):
+                return
+
+            self.moveLeft(new_pos)
+            time.sleep_ms(sleep)
+
     # Move the arm along the r axis (polar coordinates), or in height (z)
+
     def moveKinematic(self, moveToA=90, moveToR=80, moveToZ=80, speed=100):
 
         # limit min/max values
@@ -192,3 +244,7 @@ class Arm():
 
 
 arm = Arm()
+
+
+def stop_all():  # override stop function called by app
+    arm.releases()
