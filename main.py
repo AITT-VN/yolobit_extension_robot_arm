@@ -22,8 +22,8 @@ ble_connected = False
 
 speed = 100
 theta = 90
-radius = 90
-height = 90
+radius = 80
+height = 80
 
 
 def on_button_a_pressed():
@@ -64,16 +64,28 @@ def on_ble_message_string_receive_callback(chu_E1_BB_97i):
     global mode, mode_changed, theta, radius, height, speed
     if chu_E1_BB_97i == ('!B11:'):
         theta = (theta if isinstance(theta, (int, float)) else 0) + 5
+        if theta >= 180:
+            theta = 180
     elif chu_E1_BB_97i == ('!B417'):
         theta = (theta if isinstance(theta, (int, float)) else 0) + -5
+        if theta <= 0:
+            theta = 0
     elif chu_E1_BB_97i == ('!B516'):
         height = (height if isinstance(height, (int, float)) else 0) + 5
+        if height >= 125:
+            height = 125
     elif chu_E1_BB_97i == ('!B615'):
         height = (height if isinstance(height, (int, float)) else 0) + -5
+        if height <= -35:
+            height = -35
     elif chu_E1_BB_97i == ('!B814'):
         radius = (radius if isinstance(radius, (int, float)) else 0) + 5
+        if radius >= 130:
+            radius = 130
     elif chu_E1_BB_97i == ('!B714'):
         radius = (radius if isinstance(radius, (int, float)) else 0) + -5
+        if radius <= 20:
+            radius = 20
     elif chu_E1_BB_97i == ('!B219'):
         arm.moveGripper(90, 90)
     elif chu_E1_BB_97i == ('!B318'):
@@ -122,7 +134,7 @@ try:
                     arm.moveKinematic(theta, radius, height, speed)
                     print('theta: ', theta, ', radius: ',
                           radius, ' , height: ', height)
-                    time.sleep_ms(50)
+                    time.sleep_ms(10)
                     if not ble_connected:
                         break
                 # do nothing and wait for commands from bluetooth
@@ -147,7 +159,7 @@ try:
                 arm.moveRight(80, 70)
                 arm.moveBase(150, 80)
                 arm.moveRight(160, 70)
-                time.sleep_ms(50)
+                time.sleep_ms(10)
 
 except KeyboardInterrupt:
     print('ArmBot program stopped')
