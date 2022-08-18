@@ -10,7 +10,7 @@ arm = Arm(pin8, pin9, pin10, pin11)
 display.set_all('#ff0000')
 music.play(music.POWER_UP, wait=False)
 
-print('Robot Arm started and ready')
+print('ArmBot started and ready')
 
 ROBOT_MODE_DO_NOTHING = const(31)
 ROBOT_MODE_AUTO = const(32)
@@ -19,6 +19,7 @@ mode = ROBOT_MODE_DO_NOTHING
 mode_changed = False
 current_speed = 100
 ble_connected = False
+
 speed = 100
 theta = 90
 radius = 90
@@ -35,7 +36,7 @@ def on_button_a_pressed():
 
     mode_changed = True
     time.sleep_ms(100)
-    print('ode changed by button')
+    print('mode changed by button')
 
 
 button_a.on_pressed = on_button_a_pressed
@@ -89,23 +90,22 @@ def on_ble_message_name_value_receive_callback(name, value):
     global current_speed, key, ble_key_received
 
     if name == 'F':
-        print('not support')
+        print('test')
     elif name == 'B':
-        print('not support')
+        print('test')
     elif name == 'L':
-        print('not support')
+        print('test')
     elif name == 'R':
-        print('not support')
+        print('test')
     elif name == 'S':
-        print('not support')
+        print('test')
     elif name == 'S1':
-        print('not support')
+        print('test')
     elif name == 'S2':
-        print('not support')
+        print('test')
 
 
 ble.on_receive_msg("name_value", on_ble_message_name_value_receive_callback)
-
 
 try:
     while True:
@@ -129,16 +129,30 @@ try:
                 time.sleep_ms(50)
 
         elif mode == ROBOT_MODE_AUTO:
-            # Test Gripper Mode
-            arm.moveGripper(0, 90)
-            time.sleep(0.5)
-            arm.moveGripper(90, 90)
-            time.sleep(0.5)
 
+            arm.origin()
+
+            while True:
+                if mode_changed:
+                    arm.releases()
+                    time.sleep_ms(500)
+                    arm.origin()
+                    break
+                arm.moveGripper(0, 80)
+                arm.moveRight(80, 70)
+                arm.moveBase(30, 80)
+                arm.moveLeft(50, 70)
+                arm.moveRight(160, 70)
+                arm.moveGripper(90, 80)
+                arm.moveRight(80, 70)
+                arm.moveBase(150, 80)
+                arm.moveRight(160, 70)
+                time.sleep_ms(50)
 
 except KeyboardInterrupt:
     print('ArmBot program stopped')
 finally:
+    arm.releases()
     button_a.on_pressed = None
     ble.on_receive_msg("string", None)
     ble.on_connected(None)
